@@ -1,12 +1,36 @@
+<script>
+import { v4 as uuidv4 } from "uuid";
+export default {
+  data() {
+    return {
+      jogadores: [
+        { id: "6bdca00a-8ea1-4671-b7c1-897444469d47", nome: "Jogador 1" },
+        { id: "2eae6b13-7029-4327-990e-d9ec2f543a76", nome: "Jogador 2" },
+        { id: "953ad3b8-7476-4eb3-b15b-abdb907f16fe", nome: "Jogador 3" },
+        { id: "c43de862-dbd8-4cba-89dd-99b11798fa8b", nome: "Jogador 4" },
+      ],
+      novo_time: "",
+    };
+  },
+  methods: {
+    salvar() {
+      const novo_id = uuidv4();
+      this.times.push({
+        id: novo_id,
+        nome: this.novo_time,
+      });
+    },
+  },
+};
+</script>
 <template>
   <div class="container">
     <div class="title">
       <h2>Gerenciamento de times</h2>
     </div>
-    <div class="form-input2">
-      <input type="text" />
-      <input type="text" />
-      <button>Salvar</button>
+    <div class="form-input">
+      <input type="text" v-model="novo_time" />
+      <button @click="salvar">salvar</button>
     </div>
     <div class="list-times">
       <table>
@@ -14,24 +38,13 @@
           <tr>
             <th>ID</th>
             <th>Nome</th>
-            <th>Times ID</th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Time 1</td>
-            <td>???</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Time 2</td>
-            <td>???</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Time 3</td>
+          <tr v-for="time in times" :key="time.id">
+            <td>{{ time.id }}</td>
+            <td>{{ time.nome }}</td>
             <td>???</td>
           </tr>
         </tbody>
@@ -51,16 +64,14 @@
   margin: 2rem 0;
 }
 
-.form-input2 input {
-  width: 25%;
+.form-input input {
+  width: 50%;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 10px;
-  margin: 20px;
-  justify-content: center;
 }
 
-.form-input2 button {
+.form-input button {
   padding: 0.5rem;
   width: 15%;
   border: 1px solid violet;
