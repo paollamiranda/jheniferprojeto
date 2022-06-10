@@ -26,7 +26,7 @@ export default {
 <template>
   <div class="container">
     <div class="title">
-      <h2>Gerenciamento de times</h2>
+      <h2>Gerenciamento de jogadores</h2>
     </div>
     <div class="form-input">
       <input type="text" v-model="novo_time" />
@@ -42,9 +42,9 @@ export default {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="time in times" :key="time.id">
-            <td>{{ time.id }}</td>
-            <td>{{ time.nome }}</td>
+          <tr v-for="jogadores in jogadores" :key="jogadores.id">
+            <td>{{ jogadores.id }}</td>
+            <td>{{ jogadores.nome }}</td>
             <td>???</td>
           </tr>
         </tbody>
