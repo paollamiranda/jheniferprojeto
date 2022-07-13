@@ -1,87 +1,82 @@
 <script>
-import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 export default {
   data() {
     return {
-      jogadores: [
-        {
-          id: "7681ca69-b8de-44cb-b1c8-64590a1154b9",
-          nome: "Neymar Junior",
-          time: "???",
-          timeid: "PSG",
-        },
-        {
-          id: "29a4b3d8-57e0-45b5-b489-fbdc1e0864fd",
-          nome: "Roberto Firmino",
-          time: "???",
-          timeid: "Liverpool",
-        },
-        {
-          id: "26a58ccf-df47-46d8-9bfb-9fde58678557",
-          nome: "Erison",
-          time: "???",
-          timeid: "Botafogo",
-        },
-      ],
-      novo_jogador: "",
-      novo_time: "",
+      jogadores: [],
+      jogador: {},
+      times: [],
     };
   },
+  async created() {
+    await this.buscarTodosOsJogadores();
+    const times = await axios.get("http://localhost:4000/times");
+    this.times = times.data;
+  },
   methods: {
-    salvar() {
-      const novo_id = uuidv4();
-      this.jogadores.push({
-        id: novo_id,
-        nome: this.novo_jogador,
-        time: this.novo_time,
-        timeid: this.novo_timeid,
-      });
+    async buscarTodosOsJogadores() {
+      const jogadores = await axios.get(
+        "http://localhost:4000/jogadores?expand=time"
+      );
+      this.jogadores = jogadores.data;
+    },
+    async salvar() {
+      await axios.post("http://localhost:4000/jogadores", this.jogador);
+      await this.buscarTodosOsJogadores();
     },
   },
 };
 </script>
 
 <template>
-  <main>
-    <div class="container">
-      <div class="title">
-        <h2>Gerenciamento de times</h2>
-      </div>
-      <div class="form-input">
-        <input
-          type="text"
-          placeholder="jogador"
-          v-model="novo_jogador"
-          @keydown.enter="salvar"
-        />
-        <input type="text" placeholder="time" v-model="novo_time" />
-        <button @click="salvar">Salvar</button>
-      </div>
-      <div class="list-times">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nome</th>
-              <th>time</th>
-              <th>Time.id</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr v-for="jogador in jogadores" :key="jogador.id">
-              <td>{{ jogador.id }}</td>
-              <td>{{ jogador.nome }}</td>
-              <td>{{ jogador.time }}</td>
-              <td>{{ jogador.timeid }}</td>
-              <td>???</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <div class="container">
+    <div class="title">
+      <h2>Gerenciamento de jogadores</h2>
     </div>
-  </main>
+    <div class="form-input">
+      <input type="text" placeholder="Jogador" v-model="jogador.nome" />
+      <input
+        type="text"
+        placeholder="Ano nascimento"
+        v-model="jogador.anoNascimento"
+      />
+      <input
+        type="text"
+        placeholder="Posicao de Jogo"
+        v-model="jogador.posicaoJogo"
+      />
+      <select v-model="jogador.timeId">
+        <option v-for="time in times" :key="time.id" :value="time.id">
+          {{ time.nome }}
+        </option>
+      </select>
+      <button @click="salvar">Salvar</button>
+    </div>
+    <div class="list-times">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Ano Nascimento</th>
+            <th>Posição de Jogo</th>
+            <th>Time</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="jogador in jogadores" :key="jogador.id">
+            <td>{{ jogador.id }}</td>
+            <td>{{ jogador.nome }}</td>
+            <td>{{ jogador.anoNascimento }}</td>
+            <td>{{ jogador.posicaoJogo }}</td>
+            <td>{{ jogador.time.nome }}</td>
+            <td>???</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </template>
 
 <style>
