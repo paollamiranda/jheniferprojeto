@@ -135,4 +135,14 @@ table thead th {
 table tbody tr:nth-child(odd) {
   background-color: violet;
 }
+
+body {
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    247deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(237, 45, 152, 1) 0%,
+    rgba(0, 206, 255, 1) 100%
+  );
+}
 </style>
